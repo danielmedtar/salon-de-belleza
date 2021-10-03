@@ -515,4 +515,41 @@ body {
   visibility: hidden;
 }
 
+.formulario {
+  width: 100%;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.campo label {
+  flex-basis: 10rem;
+  color: #FFFFFF;
+}
+.campo input {
+  flex: 1;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: none;
+}
+
+.alerta {
+  padding: 2.5rem;
+  text-align: center;
+  color: #FFFFFF;
+  width: 100%;
+  display: block;
+}
+.alerta.error {
+  background-color: #c20000;
+}
+
+.invalidar-turno {
+  text-align: center;
+  margin: 2.5rem;
+  text-transform: uppercase;
+}
+
 /*# sourceMappingURL=app.css.map */

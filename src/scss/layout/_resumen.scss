@@ -1,0 +1,6 @@
+@use "sass:math";
+.invalidar-turno {
+    text-align: center;
+    margin: math.div($separacion, 2);
+    text-transform: uppercase;
+}

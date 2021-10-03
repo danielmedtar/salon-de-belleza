@@ -1,5 +1,12 @@
 let pagina = 1;
 
+const turno = {
+    nombre: '',
+    fecha: '',
+    hora: '',
+    servicios: []
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     iniciarApp();
 })
@@ -20,6 +27,12 @@ function iniciarApp() {
 
     //*Comprobar pagina actual para que no se desfase paginacion
     botonesPaginador()
+
+    //*Validación de la info del formulario (mostrando el resumen o generando error de no pasar la validación)
+    mostrarResumen()
+
+    //*Almacena el nombre de la persona en el objeto
+    nombreTurno()
 }
 
 async function mostrarServicios() {
@@ -115,9 +128,34 @@ function seleccionarServicio(e) {
 
     if(elemento.classList.contains('seleccionado')) {
         elemento.classList.remove('seleccionado')
+
+        const id = parseInt(elemento.dataset.idServicio);
+
+        eliminarServicio(id)
     } else {
         elemento.classList.add('seleccionado')
+
+        const objServicio = {
+            id: parseInt(elemento.dataset.idServicio),
+            nombre: elemento.firstElementChild.textContent,
+            precio: elemento.firstElementChild.nextElementSibling.textContent
+        }
+        
+        agregarServicio(objServicio)
     }
+}
+
+function eliminarServicio(id) {
+    const {servicios} = turno
+    turno.servicios = servicios.filter(servicio => servicio.id !== id)
+    console.log(turno);
+}
+
+function agregarServicio(objServicio) {
+    const {servicios} = turno
+
+    turno.servicios = [...servicios, objServicio]
+    console.log(turno);
 }
 
 function paginaSiguiente(){
@@ -159,4 +197,64 @@ function botonesPaginador() {
 
     mostrarSeccion()
 
+}
+
+function mostrarResumen() {
+    const {nombre, fecha, hora, servicios} = turno
+
+    const contenidoResumen = document.querySelector('.contenido-resumen')
+
+    if(Object.values(turno).includes('')) {
+        const faltanDatos = document.createElement('P')
+        faltanDatos.textContent = 'Faltan datos por agregar'
+
+        faltanDatos.classList.add('invalidar-turno')
+
+        contenidoResumen.appendChild(faltanDatos)
+    }
+}
+
+function nombreTurno() {
+    const nombreInput = document.querySelector('#nombre')
+
+    nombreInput.addEventListener('input', (e) => {
+        const nombreTexto = e.target.value.trim()
+
+        if(nombreTexto === '' || nombreTexto.length < 3) {
+            mostrarAlerta('nombre inválido', 'error');
+        } else {
+            const alerta = document.querySelector('.alerta')
+            if(alerta) {
+                alerta.remove()
+            }
+            turno.nombre = nombreTexto
+
+            console.log(turno);
+        }
+        
+    })
+}
+
+function mostrarAlerta(mensaje, tipo) {
+    //*Si hay una alerta previa no crear mas
+    const alertaPrevia = document.querySelector('.alerta')
+    if(alertaPrevia) {
+        return
+    }
+
+    const alerta = document.createElement('DIV')
+    alerta.textContent = mensaje
+    alerta.classList.add('alerta')
+
+    if(tipo === 'error') {
+        alerta.classList.add('error')
+    }
+    //insertar en html
+    const formulario = document.querySelector('.formulario')
+    formulario.appendChild(alerta)
+
+    //ELIMINAR ALERTA DESPUES DE 3SEG
+    setTimeout(() => {
+        alerta.remove()
+    }, 3000);
 }
